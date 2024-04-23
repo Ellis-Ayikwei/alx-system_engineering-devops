@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
-#server that redirects to another page.
+# Configures an Nginx server to redirect to another page.
 
 sudo apt-get update
 sudo apt-get install -y nginx
 
 echo "Hello World!" > /var/www/html/index.html
+
 new_url="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.techspot.com permanent;"
 nginx_config="/etc/nginx/sites-available/default"
+
 sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 
 sudo service nginx restart
+
