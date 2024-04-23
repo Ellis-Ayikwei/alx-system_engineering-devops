@@ -13,8 +13,8 @@ sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 
 # code to create error page and add a redirect for error 404
 echo "Ceci n'est pas une page" > /var/www/html/404.html
-string_for_replacement="listen 80 default_server;\n\terror_page 404 \/40    4.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinte    rnal;\n\t}"
+new_url="listen 80 default_server;\n\terror_page 404 \/40    4.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinte    rnal;\n\t}"
 
-
+sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 sudo service nginx restart
 
