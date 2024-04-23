@@ -4,8 +4,8 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 
-echo "Hello World!" | sudo tee /var/www/html/index.html
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.blog.groupellis.com permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+echo "Hello World!" > /var/www/html/index.html
+new_url="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.techspot.com permanent;"
+sudo sed -i "s/server_name _;/$new_url/" /etc/nginx/sites-enabled/default
 
 sudo service nginx restart
