@@ -6,5 +6,7 @@ sudo apt-get install -y nginx
 
 echo "Hello World!" > /var/www/html/index.html
 new_url="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.techspot.com permanent;"
-sudo sed -i "s/server_name _;/$new_url/" /etc/nginx/sites-enabled/default
+nginx_config="/etc/nginx/sites-available/default"i
+sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
+
 sudo service nginx restart
