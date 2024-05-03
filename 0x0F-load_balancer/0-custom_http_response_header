@@ -1,42 +1,27 @@
 #!/usr/bin/env bash
+# Configures an Nginx server to redirect to another page.
 
-# Configure web-02 to be identical to web-01 (mimics configuration, not direct copy)
-
-# Update package list
 sudo apt-get update
-
-# Install Nginx web server
 sudo apt-get install -y nginx
+ufw allow 'Nginx HTTP'
 
-# Create a simple test page
 echo "Hello World!" > /var/www/html/index.html
 
-# Redirect rule
 new_url="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.techspot.com permanent;"
 nginx_config="/etc/nginx/sites-enabled/default"
 
-# Update configuration file (check for existing redirect before adding)
-if ! sudo grep -q "rewrite ^\/redirect_me" "$nginx_config"; then
-  sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
-fi
-
-# Create a custom error page
-echo "Ceci n'est pas une page" > /var/www/html/404.html
-
-# Configure Nginx to serve the custom error page
-new_url="listen 80 default_server;\n\terror_page 404 /404.html;\n\tlocation /404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}"
 sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 
-# Add server information to header
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+new_url="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinte    rnal;\n\t}"
+
 var=$(hostname)
-new_string2="server {\n\tadd_header X-Served-By $var;\n}"
+new_string2="server {\n\tadd_header X-Served-By $var;"
 
-# Add header only if it's missing
+sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
+
+ # Add header only if it's missing
 if ! sudo grep -q "add_header X-Served-By" "$nginx_config"; then
-  sudo sed -i -E "s/^server \{/$new_string2/" "$nginx_config"
+     sudo sed -i -E "s/^server \{/$new_string2/" "$nginx_config"
 fi
-
-# Restart Nginx service
 sudo service nginx restart
-
-echo "Web server configuration updated on $var"
