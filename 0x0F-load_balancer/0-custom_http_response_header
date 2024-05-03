@@ -13,7 +13,7 @@ apt-get install nginx -y
 echo "Hello World!" > /usr/share/nginx/html/index.html
 mkdir -p /var/www/html
 echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
-sudo sed -i -E "s/^[^#]+location \/ \{/$new_string/" /etc/nginx/sites-available/defaulti
+sudo sed -i -E "s/^[^#]+location \/ \{/$new_string/" /etc/nginx/sites-available/default
 
 if ! sudo grep -q "add_header X-Served-By" "$nginx_config"; then
      sudo sed -i -E "s/^server \{/$new_string2/" "$nginx_config"
