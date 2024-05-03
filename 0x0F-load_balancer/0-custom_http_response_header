@@ -14,14 +14,20 @@ sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 
 #show the error page
 echo "Ceci n'est pas une page" > /var/www/html/404.html
-new_url="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tloca  tion = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
-
-var=$(hostname)
-new_string2="server {\n\tadd_header X-Served-By $var;"
+new_url="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
 sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 
-if ! sudo grep -q "add_header X-Served-By $var" "$nginx_config"; then
-     sed -i -E "s/^server \{/$new_string2/" "$nginx_config"
+
+
+# Add custom response header to know the server name for debugging
+HOST_NAME=$(hostname)
+HEADER="\\\n\tadd_header X-Served-By $HOST_NAME;\n"
+FIND=$(grep "X-Server-by" /etc/nginx/sites-available/default)
+if [[ -z $FIND ]]; then
+    sed -i "23i $HEADER" /etc/nginx/sites-available/default
 fi
+
+
+
 
 sudo service nginx restart
