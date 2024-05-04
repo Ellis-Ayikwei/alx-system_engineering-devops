@@ -1,21 +1,16 @@
+cat 0-custom_http_response_header
 #!/usr/bin/env bash
-# Configures an Nginx server to redirect to another page.
+# Configure Nginx so that its HTTP response contains a custom header
+# HTTP response contains a custom header (on web-01 and web-02)
 
-sudo apt-get update
-sudo apt-get install -y nginx
-
-echo "Hello World!" > /var/www/html/index.html
-
-new_url="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.techspot.com permanent;"
+new_string="error_page 404 \/custom_404.html;\n location \/redirect_me {\n return 301 \$scheme:\/\/www.techspot.com;"
 nginx_config="/etc/nginx/sites-enabled/default"
 
-sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
+apt-get update -y
+apt-get install nginx -y
+echo "Hello World!" > /var/www/html/index.html
+mkdir -p /var/www/html
+echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+sudo sed -i -E "s/^[^#]+location \/ \{/$new_string/" "$nginx_config"
 
-
-
-echo "Ceci n'est pas une page" > /var/www/html/404.html
-new_url="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinte    rnal;\n\t}"
-
-sudo sed -i "s/server_name _;/$new_url/" "$nginx_config"
 sudo service nginx restart
-
