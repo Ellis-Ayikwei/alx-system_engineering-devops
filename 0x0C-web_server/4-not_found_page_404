@@ -10,6 +10,7 @@
 
 apt-get update
 apt-get install -y nginx
+nginx_config="/etc/nginx/sites-enabled/default"
 
 mkdir -p /var/www/html
 touch /var/www/html/index.html
@@ -25,7 +26,7 @@ printf %s "server {
     index  index.html index.htm;
 
     location /redirect_me {
-        return 301 http://cuberule.com/;
+        return 301 http://techspot.com/;
     }
 
     error_page 404 /404.html;
@@ -33,6 +34,6 @@ printf %s "server {
       root /var/www/html;
       internal;
     }
-}" > /etc/nginx/sites-available/default
+}" > "$nginx_config"
 
 service nginx restart
