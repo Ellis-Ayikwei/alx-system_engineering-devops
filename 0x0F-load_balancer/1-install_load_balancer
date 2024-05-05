@@ -9,8 +9,6 @@ apt-get update
 apt-get install -y haproxy=2.9.\*
 # Configure HAProxy
 
-# Create a backup of the default configuration
-cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 
 mv /etc/haproxy/haproxy.cfg{,.original}
 echo "ENABLED=1" >> /etc/default/haproxy
@@ -18,7 +16,8 @@ touch /etc/haproxy/haproxy.cfg
 
 # shellcheck disable=SC2154
 
-
+#create a backup
+cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 # Edit the HAProxy configuration file
 echo "
 global
@@ -29,24 +28,24 @@ global
 
 frontend groupellis.tech
     bind *:80  # Listen on port 80
-    timeout client              30000
+    timeout client    30000
     default_backend web_servers
 
 backend web_servers
     balance roundrobin
-    timeout connect             30000
-    timeout server              30000
+    timeout connect     30000
+    timeout server      30000
     server 313389-web-01 100.27.11.38:80
     server 313389-web-02 107.23.156.4:80
 " > /etc/haproxy/haproxy.cfg
 
 # Enable HAProxy service management
-systemctl enable haproxy
+sudo systemctl enable haproxy
 
 # Start HAProxy service
-systemctl start haproxy
+sudo systemctl start haproxy
 
 # Verify HAProxy status
-systemctl status haproxy
+sudo systemctl status haproxy
 
 sudo ufw allow 80
