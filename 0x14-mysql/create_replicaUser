@@ -1,0 +1,23 @@
+#!/bin/bash
+ROOT_PASSWORD=<my ROOT_PASSWORD>
+Mypassword=<my ROOT_PASSWORD>
+
+# Define the script to create replica_user for replication
+create_user_script=$(cat <<EOF
+#!/bin/bash
+
+# Create replica_user for replication
+mysql -u root -p"$ROOT_PASSWORD" -e "CREATE USER 'replica_user'@'%' IDENTIFIED BY '$Mypassword';"
+
+# Grant replication privileges to replica_user
+mysql -u root -p"$ROOT_PASSWORD" -e "GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';"
+
+# Flush privileges to apply changes
+mysql -u root -p"$ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
+
+echo "User replica_user created with replication privileges."
+EOF
+)
+
+# Execute the user creation script on web-01
+ssh ubuntu@100.27.11.38 'bash -s' <<< "$create_user_script"

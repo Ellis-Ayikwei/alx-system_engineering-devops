@@ -1,0 +1,25 @@
+#!/bin/bash
+ROOT_PASSWORD=<my ROOT_PASSWORD>
+
+# Define the script to set up MySQL database for replication
+setup_script=$(cat <<EOF
+#!/bin/bash
+
+# Create database named tyrell_corp
+mysql -u root -p"$ROOT_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS tyrell_corp;"
+
+# Create table named nexus6 within the tyrell_corp database
+mysql -u root -p"$ROOT_PASSWORD" tyrell_corp -e "CREATE TABLE IF NOT EXISTS nexus6 (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));"
+
+# Insert at least one entry into the nexus6 table
+mysql -u root -p"$ROOT_PASSWORD" tyrell_corp -e "INSERT INTO nexus6 (name) VALUES ('Replicant');"
+
+# Grant SELECT permissions on the nexus6 table to holberton_user
+mysql -u root -p"$ROOT_PASSWORD" -e "GRANT SELECT ON tyrell_corp.nexus6 TO 'holberton_user'@'localhost';"
+
+echo "Database setup completed successfully."
+EOF
+)
+
+# Execute the setup script on web-01
+ssh ubuntu@100.27.11.38 'bash -s' <<< "$setup_script"
