@@ -1,13 +1,13 @@
 #!/bin/bash
-ROOT_PASSWORD=<my ROOT_PASSWORD>
-Mypassword=<my ROOT_PASSWORD>
+ROOT_PASSWORD=<myPassword>
+Mypassword=<myPassword>
 
 # Define the script to create replica_user for replication
 create_user_script=$(cat <<EOF
 #!/bin/bash
 
 # Create replica_user for replication
-mysql -u root -p"$ROOT_PASSWORD" -e "CREATE USER 'replica_user'@'%' IDENTIFIED BY '$Mypassword';"
+mysql -u root -p"$ROOT_PASSWORD" -e "CREATE USER 'replica_user'@'%' IDENTIFIED BY '"$Mypassword"';"
 
 # Grant replication privileges to replica_user
 mysql -u root -p"$ROOT_PASSWORD" -e "GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';"
@@ -15,9 +15,22 @@ mysql -u root -p"$ROOT_PASSWORD" -e "GRANT REPLICATION SLAVE ON *.* TO 'replica_
 # Flush privileges to apply changes
 mysql -u root -p"$ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
 
+# Grant SELECT permissions on the mysql.user table to holberton_user
+mysql -u root -p"$ROOT_PASSWORD" -e "GRANT SELECT ON mysql.user TO 'holberton_user'@'localhost';"
+
 echo "User replica_user created with replication privileges."
 EOF
 )
 
 # Execute the user creation script on web-01
 ssh ubuntu@100.27.11.38 'bash -s' <<< "$create_user_script"
+
+
+
+
+CHANGE MASTER TO
+    MASTER_HOST = '100.27.11.38',
+    MASTER_USER = 'replica_user',
+    MASTER_PASSWORD = '<myPassword>',
+    MASTER_LOG_FILE = 'mysql-bin.000004',
+    MASTER_LOG_POS = 154;
