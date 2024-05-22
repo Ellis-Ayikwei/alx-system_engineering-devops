@@ -17,7 +17,6 @@ if __name__ == "__main__":
     for title in to_do:
         if title.get("completed", False):
             completed.append(title["title"])
-    print(completed)
     print("Employee {} is done with tasks({}/{}):".format(usr_id.get("name"),
                                                           len(completed),
                                                           len(to_do)))
