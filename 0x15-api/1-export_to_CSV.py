@@ -4,9 +4,10 @@ for a given employee ID, returns information
 about his/her TODO list progress.
 export the data into csv file
 """
+import csv
 import requests as req
 import sys
-import csv
+
 
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
