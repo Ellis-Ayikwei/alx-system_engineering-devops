@@ -23,9 +23,9 @@ if __name__ == "__main__":
             to_dos = req.get(url + 'todos',
                              params={"userId": usr.get("id")}).json()
             for task in to_dos:
-                tasklist.append({usr.get("id"): [{
+                tasklist.append({usr.get("id"): {
                     "username": usr.get("username"),
                     "task": task.get("title"),
                     "completed": task.get("completed")
-                }]})
+                }})
         json.dump(tasklist, jsonfile)
