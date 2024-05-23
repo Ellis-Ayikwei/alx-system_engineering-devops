@@ -19,13 +19,12 @@ if __name__ == "__main__":
     with open("todo_all_employees.json", "w", newline="") as jsonfile:
         tasklist = []
         for usr in usrs:
-            print(usr)
+            usr_tlist = []
             to_dos = req.get(url + 'todos',
                              params={"userId": usr.get("id")}).json()
-            for task in to_dos:
-                tasklist.append({usr.get("id"): {
-                    "username": usr.get("username"),
-                    "task": task.get("title"),
-                    "completed": task.get("completed")
-                }})
+            tasklist.append({usr.get("id"): [{
+                "username": usr.get("username"),
+                "task": task.get("title"),
+                "completed": task.get("completed")
+                }for task in to_dos ]})
         json.dump(tasklist, jsonfile)
