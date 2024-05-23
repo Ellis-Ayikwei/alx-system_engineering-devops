@@ -17,14 +17,11 @@ if __name__ == "__main__":
 
     # # open write the data into a csv file using the user id
     with open("todo_all_employees.json", "w", newline="") as jsonfile:
-        tasklist = []
-        for usr in usrs:
-            usr_tlist = []
-            to_dos = req.get(url + 'todos',
-                             params={"userId": usr.get("id")}).json()
-            tasklist.append({usr.get("id"): [{
+        json.dump(
+            {usr.get("id"): [{
                 "username": usr.get("username"),
                 "task": task.get("title"),
                 "completed": task.get("completed")
-                }for task in to_dos ]})
-        json.dump(tasklist, jsonfile)
+                }for task in req.get(url + 'todos',
+                                     params={"userId": usr.get("id")}).json()]
+                for usr in usrs}, jsonfile)
