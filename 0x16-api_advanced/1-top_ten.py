@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""a module that defines the top_ten"""
+"""a module that defines the top_ten function"""
 import requests
 
 
