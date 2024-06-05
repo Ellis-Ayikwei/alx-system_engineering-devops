@@ -10,9 +10,11 @@ def top_ten(subreddit):
         subreddit -- the subreddit to be checked
     Return: the top ten reddits posts 
     """
+    
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    useraAgent = requests.get('https://httpbin.org/user-agent').json()['user-agent']
     headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+        "User-Agent": useraAgent
     }
     params = {
         "limit": 10
