@@ -4,8 +4,7 @@ import requests
 
 
 def top_ten(subreddit):
-    """Return the top ten reddits posts of a subreddit.
-    """
+    """Return the top ten reddits posts of a subreddit."""
 
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     useraAgent = requests.get('https://httpbin.org/user-agent').json()
