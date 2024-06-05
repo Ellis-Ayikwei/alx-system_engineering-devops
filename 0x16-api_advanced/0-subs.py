@@ -18,7 +18,7 @@ def number_of_subscribers(subreddit):
     Returns:
         int: The number of subscribers for the subreddit, or 0 if invalid.
     """
-    
+
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     useraAgent = requests.get('https://httpbin.org/user-agent').json()
     useraAgent = useraAgent['user-agent']

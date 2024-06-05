@@ -8,9 +8,9 @@ def top_ten(subreddit):
 
     arguments:
         subreddit -- the subreddit to be checked
-    Return: the top ten reddits posts 
+    Return: the top ten reddits posts
     """
-    
+
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     useraAgent = requests.get('https://httpbin.org/user-agent').json()
     useraAgent = useraAgent['user-agent']
@@ -21,10 +21,9 @@ def top_ten(subreddit):
         "limit": 10
     }
     res = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
+                       allow_redirects=False)
     if res.status_code == 404:
         print("None")
         return
     results = res.json().get("data")
     [print(x.get("data").get('title')) for x in results.get("children")]
-    

@@ -16,7 +16,7 @@ def count_words(subreddit, word_list, instances={}, after="", count=0):
         after (str): The parameter for the next page of the API results.
         count (int): The parameter of results matched per query .
     """
-    
+
     url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
     useraAgent = requests.get('https://httpbin.org/user-agent').json()
     useraAgent = useraAgent['user-agent']
