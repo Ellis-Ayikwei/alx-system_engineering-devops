@@ -10,12 +10,6 @@ import requests
 def number_of_subscribers(subreddit):
     """
     Return the total number of subscribers for a given subreddit.
-
-    Arguments:
-        subreddit -- the subreddit to be checked
-
-    Return:
-        The number of subscribers of the subreddit
     """
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {
