@@ -5,10 +5,6 @@ import requests
 
 def top_ten(subreddit):
     """Return the top ten reddits posts of a subreddit.
-
-    arguments:
-        subreddit -- the subreddit to be checked
-    Return: the top ten reddits posts
     """
 
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
