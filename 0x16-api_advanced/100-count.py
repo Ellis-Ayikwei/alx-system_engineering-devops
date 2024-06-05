@@ -27,7 +27,6 @@ def count_words(subreddit, word_list, instances={}, after="", count=0):
         if res.status_code != 200:
             raise Exception
     except Exception:
-        print("")
         return
 
     results = results.get("data")
