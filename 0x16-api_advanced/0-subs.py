@@ -20,8 +20,8 @@ def number_of_subscribers(subreddit):
     """
     
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    useraAgent = requests.get('https://httpbin.org/user-agent').json()['user-agent']
-
+    useraAgent = requests.get('https://httpbin.org/user-agent').json()
+    useraAgent = useraAgent['user-agent']
     headers = {
         "User-Agent": useraAgent
     }

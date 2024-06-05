@@ -18,8 +18,8 @@ def count_words(subreddit, word_list, instances={}, after="", count=0):
     """
     
     url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
-    useraAgent = requests.get('https://httpbin.org/user-agent').json()['user-agent']
-
+    useraAgent = requests.get('https://httpbin.org/user-agent').json()
+    useraAgent = useraAgent['user-agent']
     headers = {
         "User-Agent": useraAgent
     }

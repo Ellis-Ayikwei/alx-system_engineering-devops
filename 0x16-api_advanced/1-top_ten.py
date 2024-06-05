@@ -12,7 +12,8 @@ def top_ten(subreddit):
     """
     
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
-    useraAgent = requests.get('https://httpbin.org/user-agent').json()['user-agent']
+    useraAgent = requests.get('https://httpbin.org/user-agent').json()
+    useraAgent = useraAgent['user-agent']
     headers = {
         "User-Agent": useraAgent
     }

@@ -8,7 +8,8 @@ def recurse(subreddit, hot_list=[],  after="", count=0):
     titles of all hot articles for a given subreddit.
     """
     url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
-    useraAgent = requests.get('https://httpbin.org/user-agent').json()['user-agent']
+    useraAgent = requests.get('https://httpbin.org/user-agent').json()
+    useraAgent = useraAgent['user-agent']
     headers = {
         "User-Agent": useraAgent
     }
