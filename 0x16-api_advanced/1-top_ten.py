@@ -6,7 +6,7 @@ import requests
 def top_ten(subreddit):
     """Return the top ten reddits posts of a subreddit."""
 
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
     useraAgent = requests.get('https://httpbin.org/user-agent').json()
     useraAgent = useraAgent['user-agent']
     headers = {
@@ -20,4 +20,4 @@ def top_ten(subreddit):
     if res.status_code != 200:
         return "None"
     results = res.json().get("data")
-    [print(x.get("data").get('title')) for x in results.get("children")]
+    [print(child.get("data").get('title')) for child in results.get("children")]
