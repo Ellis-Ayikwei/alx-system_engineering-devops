@@ -20,5 +20,5 @@ def top_ten(subreddit):
     if res.status_code != 200:
         return "None"
     results = res.json().get("data")
-    [print(child.get("data").get('title')) 
+    [print(child.get("data").get('title'))
      for child in results.get("children")]
