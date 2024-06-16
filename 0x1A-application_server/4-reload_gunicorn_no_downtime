@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# Function to find the parent PID of a given PID
+function find_parent_ppid {
+    local pid=$1
+    parent_pid=$(ps -o ppid= -p "$pid" | tr -d '[:space:]')  # Get parent PID of the given PID, remove whitespace
+    echo "$parent_pid"  # Output the parent PID
+}
+
+# Function to gracefully reload Gunicorn
+function reload_gunicorn {
+    # Define PID file path
+    pid_file="gunicornPid"  # Path to the file containing Gunicorn PIDs
+
+    # Check if PID file exists
+    if [[ ! -f "$pid_file" ]]; then
+        echo "Error: Gunicorn PID file not found at '$pid_file'."  # Ptint error if file not found
+        return 1  # Exit with non-zero code to indicate error
+    fi
+
+    # Read PIDs from file into an array
+    readarray -t pids < "$pid_file" 
+
+    # Check if there are no PIDs
+    if [[ ${#pids[@]} -eq 0 ]]; then
+        echo "Error: No Gunicorn PIDs found in '$pid_file'."  # Print error if array is empty
+        return 1  # Exit with non-zero code to indicate error
+    fi
+
+    # Create an associative array to track unique parent PIDs
+    declare -A parent_pids  # Declare an associative array
+
+    # Iterate over each PID to find and store unique parent PIDs
+    for pid in "${pids[@]}"; do
+        pid=$(echo "$pid" | tr -d '[:space:]')  # Remove any whitespace from PID
+
+        if [[ -n "$pid" ]]; then  # Check if PID is not empty
+            parent_pid=$(find_parent_ppid "$pid")  # Get the parent PID
+            if [[ -n "$parent_pid" && "$parent_pid" -ne 1 ]]; then  # Ensure parent PID is valid and not init process like the pid with 1
+                parent_pids["$parent_pid"]=1  # Add parent PID to the associative array
+            fi
+        fi
+    done
+
+    # Iterate over unique parent PIDs and send HUP signal for graceful reload
+    for parent_pid in "${!parent_pids[@]}"; do
+        echo "Sending HUP signal to Gunicorn parent process (PID: $parent_pid) for graceful reload."
+        kill -HUP "$parent_pid" &> /dev/null  # Send HUP signal, suppressing standard output/error
+    done
+
+    # Optional waiting period (adjust as needed)
+    sleep 5  # Wait for 5 seconds to allow processes to reload
+    echo "\ \ processes reloaded successfully"
+}
+
+# Find Gunicorn processes and save their PIDs to the file
+pgrep gunicorn > gunicornPid  
+
+# Main script execution
+reload_gunicorn  # Call the reload function
+exit $?  # Exit with the return code of the reload function
